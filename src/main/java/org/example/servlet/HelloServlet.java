@@ -2,6 +2,9 @@ package org.example.servlet;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -11,30 +14,10 @@ import java.io.IOException;
 @WebServlet("/hi")
 
 // TODO: Servet, ServletRequest, ServletResponse
-// TODO: HttpServlet
-public class HelloServlet implements Servlet {
+// TODO: HttpServlet, HttpServletRequest, HttpServletResponse
+public class HelloServlet extends HttpServlet {
     @Override
-    public void init(ServletConfig config) throws ServletException {
-
-    }
-
-    @Override
-    public ServletConfig getServletConfig() {
-        return null;
-    }
-
-    @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        res.getWriter().write("Hello");
-    }
-
-    @Override
-    public String getServletInfo() {
-        return null;
-    }
-
-    @Override
-    public void destroy() {
-
+    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().write("Hello");
     }
 }

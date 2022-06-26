@@ -7,3 +7,8 @@ X-Password: secret
 GET http://localhost:8080/users.getById?id=1
 X-Login: vasya
 X-Password: secret
+
+### users.create
+GET http://localhost:8080/users.create?login=masha
+X-Login: vasya
+X-Password: secret

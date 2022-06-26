@@ -20,8 +20,8 @@ import java.util.Objects;
 public class AuthFilter extends HttpFilter {
     // TODO: replace with db
     private final Map<String, String> users = Map.of(
-      "vasya", "secret",
-      "petya", "secret"
+            "vasya", "secret",
+            "petya", "secret"
     );
 
     // log - logger

@@ -9,6 +9,6 @@ X-Login: vasya
 X-Password: secret
 
 ### users.create
-GET http://localhost:8080/users.create?login=sasha&password=password
+GET http://localhost:8080/users.create?login=dasha&password=password
 X-Login: vasya
 X-Password: secret

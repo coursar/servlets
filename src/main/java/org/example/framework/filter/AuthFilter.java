@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.framework.attribute.RequestAttributes;
 import org.example.framework.security.Authentication;
 
 import java.io.IOException;
@@ -70,7 +69,7 @@ public class AuthFilter extends HttpFilter {
 
         // TODO: request достаточно часто используют для передачи через атрибуты доп.значений (например, аутентификации)
         final Authentication authentication = new Authentication(login);
-        req.setAttribute(RequestAttributes.AUTHENTICATION_ATTR, authentication);
+        req.setAttribute("Authentication", authentication);
 
         chain.doFilter(req, res);
     }

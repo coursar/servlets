@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.dto.UserDTO;
 import org.example.app.manager.UserManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +19,7 @@ public class UserController {
     private final UserManager manager;
     private final Gson gson;
 
+    @RequestMapping("/users.getAll")
     public void getAll(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         // TODO:
         //  1. req - параметры
@@ -28,6 +30,7 @@ public class UserController {
     }
 
     // TODO: http://localhost:8080?users.getById?id=1
+    @RequestMapping("/users.getById")
     public void getById(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         // TODO:
         //  1. req - параметры
@@ -38,6 +41,7 @@ public class UserController {
         res.getWriter().write(gson.toJson(responseDTO));
     }
 
+    @RequestMapping("/users.create")
     public void create(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         final String login = req.getParameter("login");
         final String password = req.getParameter("password");

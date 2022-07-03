@@ -9,6 +9,9 @@ import org.example.app.controller.UserController;
 import org.example.app.manager.UserManager;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.handler.WebHandler;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Map;
 
@@ -19,21 +22,13 @@ public class ServletContextLoadDestroyListener implements ServletContextListener
     public void contextInitialized(final ServletContextEvent sce) {
         final ServletContext servletContext = sce.getServletContext();
 
-        // сборка зависимостей
-        final Gson gson = new Gson();
-        final UserManager userManager = new UserManager();
-        final UserController userController = new UserController(userManager, gson);
-
-        final Map<String, WebHandler> handlers = Map.of(
-                "/users.getAll", userController::getAll, // method reference
-                "/users.getById", userController::getById,
-                "/users.create", userController::create
-        );
-
-        servletContext.setAttribute(ContextAttributes.HANDLERS_CONTEXT_ATTR, handlers);
+        final var context = new AnnotationConfigApplicationContext("org.example.app");
+        servletContext.setAttribute(ContextAttributes.SPRING_CONTEXT, context);
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent sce) {
+        final var context = (ConfigurableApplicationContext) sce.getServletContext().getAttribute(ContextAttributes.SPRING_CONTEXT);
+        context.close();
     }
 }

@@ -19,6 +19,7 @@
         <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <logback-classic.version>1.2.11</logback-classic.version>
         <gson.version>2.9.0</gson.version>
+        <spring-context.version>5.3.20</spring-context.version>
     </properties>
 
     <dependencies>
@@ -44,9 +45,16 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-context.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>

@@ -1,6 +1,6 @@
 package org.example.framework.servlet;
 
-import jakarta.servlet.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.framework.attribute.ContextAttributes;
 import org.example.framework.handler.WebHandler;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.Map;
@@ -23,8 +24,9 @@ public class DispatcherServlet extends HttpServlet {
     private Map<String, WebHandler> handlers;
 
     @Override
-    public void init() throws ServletException {
-        handlers = (Map<String, WebHandler>) getServletContext().getAttribute(ContextAttributes.HANDLERS_CONTEXT_ATTR);
+    public void init() {
+        final ApplicationContext context = (ApplicationContext) getServletContext().getAttribute(ContextAttributes.SPRING_CONTEXT);
+        handlers = (Map<String, WebHandler>) context.getBean("handlers");
     }
 
     @Override

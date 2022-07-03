@@ -4,15 +4,15 @@ import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.example.app.dto.UserDTO;
 import org.example.app.manager.UserManager;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 
+@Controller
 @RequiredArgsConstructor // генерирует конструктор только для final non-static полей
 public class UserController {
     private final UserManager manager;

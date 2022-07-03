@@ -40,7 +40,8 @@ public class UserController {
 
     public void create(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         final String login = req.getParameter("login");
-        final UserDTO responseDTO = manager.create(login);
+        final String password = req.getParameter("password");
+        final UserDTO responseDTO = manager.create(login, password);
         res.getWriter().write(gson.toJson(responseDTO));
     }
 }

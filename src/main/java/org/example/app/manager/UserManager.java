@@ -1,44 +1,69 @@
 package org.example.app.manager;
 
+import lombok.RequiredArgsConstructor;
 import org.example.app.dto.UserDTO;
 import org.example.app.exception.UserLoginAlreadyRegisteredException;
-import org.example.app.exception.UserNotFoundException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
-// TODO: DB
+@RequiredArgsConstructor
 public class UserManager {
-    private long nextId = 1;
-    private final List<UserDTO> users = new ArrayList<>();
+    private final NamedParameterJdbcOperations jdbcOperations;
+    private final RowMapper<UserDTO> rowMapper = (rs, rowNum) ->
+            new UserDTO(rs.getLong("id"), rs.getString("login"));
 
     public List<UserDTO> getAll() {
-        return users;
+        return jdbcOperations.query(
+                // language=PostgreSQL
+                """
+                SELECT id, login FROM users
+                """,
+                rowMapper
+        );
     }
 
     public UserDTO getById(final long id) {
-        for (UserDTO user : users) {
-            if (user.getId() == id) {
-                return user;
-            }
-        }
-        throw new UserNotFoundException();
+        return jdbcOperations.queryForObject(
+                // language=PostgreSQL
+                """
+                SELECT id, login FROM users WHERE id = :id
+                """,
+                Map.of("id", id),
+                rowMapper
+        );
     }
 
-    public UserDTO create(final String login) {
+    public UserDTO create(final String login, final String password) {
         Objects.requireNonNull(login);
 
-        for (UserDTO user : users) {
-            if (user.getLogin().equals(login)) {
-                throw new UserLoginAlreadyRegisteredException(login);
-            }
+        final boolean loginAlreadyRegistered = jdbcOperations.queryForObject(
+                // language=PostgreSQL
+                """
+                SELECT count(*) != 0 FROM users WHERE login = :login
+                """,
+                Map.of("login", login),
+                Boolean.class
+        );
+        if (loginAlreadyRegistered) {
+            throw new UserLoginAlreadyRegisteredException(login);
         }
 
-        final UserDTO user = new UserDTO(nextId++, login);
-        users.add(user);
-        return user;
+        return jdbcOperations.queryForObject(
+                // language=PostgreSQL
+                """
+                INSERT INTO users(login, password) VALUES (:login, :password) RETURNING id, login
+                """,
+                Map.of(
+                        "login", login,
+                        "password", password
+                ),
+                rowMapper
+        );
     }
 }

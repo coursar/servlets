@@ -1,51 +1,60 @@
 package org.example.app.controller;
 
-import com.google.gson.Gson;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.app.dto.UserDTO;
+import org.example.app.dto.UserRequestDTO;
+import org.example.app.dto.UserResponseDTO;
 import org.example.app.manager.UserManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.example.framework.security.Authentication;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor // генерирует конструктор только для final non-static полей
 public class UserController {
     private final UserManager manager;
-    private final Gson gson;
 
-    @RequestMapping("/users.getAll")
-    public void getAll(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
-        // TODO:
-        //  1. req - параметры
-        //  2. передать параметры в manager'а
-        //  3. записать ответ с помощью Gson
-        final List<UserDTO> responseDTO = manager.getAll();
-        res.getWriter().write(gson.toJson(responseDTO));
+    @GetMapping("/users")
+    public List<UserResponseDTO> getAll(
+            @RequestAttribute final Authentication authentication
+    ) {
+        final List<UserResponseDTO> responseDTO = manager.getAll();
+        return responseDTO;
     }
 
-    // TODO: http://localhost:8080?users.getById?id=1
-    @RequestMapping("/users.getById")
-    public void getById(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
-        // TODO:
-        //  1. req - параметры
-        //  2. передать параметры в manager'а
-        //  3. записать ответ с помощью Gson
-        final long id = Long.parseLong(req.getParameter("id"));
-        final UserDTO responseDTO = manager.getById(id);
-        res.getWriter().write(gson.toJson(responseDTO));
+    // TODO: http://localhost:8080/users/1
+    @GetMapping("/users/{id}")
+    public UserResponseDTO getById(
+            @RequestAttribute final Authentication authentication,
+            @PathVariable final long id
+    ) {
+        final UserResponseDTO responseDTO = manager.getById(id);
+        return responseDTO;
     }
 
-    @RequestMapping("/users.create")
-    public void create(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
-        final String login = req.getParameter("login");
-        final String password = req.getParameter("password");
-        final UserDTO responseDTO = manager.create(login, password);
-        res.getWriter().write(gson.toJson(responseDTO));
+    @PostMapping("/users")
+    public UserResponseDTO create(
+            @RequestAttribute final Authentication authentication,
+            @RequestBody final UserRequestDTO requestDTO
+    ) {
+        final UserResponseDTO responseDTO = manager.create(requestDTO);
+        return responseDTO;
+    }
+
+    @PutMapping("/users")
+    public UserResponseDTO update(
+            @RequestAttribute final Authentication authentication,
+            @RequestBody final UserRequestDTO requestDTO
+    ) {
+        final UserResponseDTO responseDTO = manager.update(requestDTO);
+        return responseDTO;
+    }
+
+    @DeleteMapping("/users/{id}")
+    public void deleteById(
+            @RequestAttribute final Authentication authentication,
+            @PathVariable final long id
+    ) {
+        manager.deleteById(id);
     }
 }

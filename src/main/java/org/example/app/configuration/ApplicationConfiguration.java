@@ -12,11 +12,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class ApplicationConfiguration {
-    @Bean
-    public Gson gson() {
-        return new Gson();
-    }
-
     @Bean(destroyMethod = "close")
     // initMethod = какой метод вызывать при инициализации
     // destroyMethod = какой метод вызывать при закрытии контекста
